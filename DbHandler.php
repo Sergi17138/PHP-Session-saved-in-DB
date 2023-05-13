@@ -1,49 +1,35 @@
 <?php
 
-class DbHandler
-{
-
+class DbHandler {
     private $conn;
 
-    function __construct()
-    {
+    function __construct() {
 
-        try {
-            $host = "DESKTOP-5NU09AJ\SQLEXPRESS";
-            $db = "PHP_Sessions_Test";
+        $host = "DESKTOP-5NU09AJ\SQLEXPRESS";
+        $db = "PHP_Sessions_Test";
 
-            $connOptions = array("Database" => $db, "CharacterSet" => "UTF-8");
-
-            $this->conn = sqlsrv_connect($host, $connOptions);
-            if (!$this->conn) {
-                throw new Exception("Failed to connect to database");
-            }
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        $connOptions = array("Database" => $db, "CharacterSet" => "UTF-8");
+        $this->conn = sqlsrv_connect($host, $connOptions);
+        if (!$this->conn) {
+            throw new Exception("Error connecting to the database");
         }
     }
 
-    function getConn()
-    {
+    public function getConn() {
         return $this->conn;
     }
-
-    function closeConn() {
+    public function closeConn() {
         sqlsrv_close($this->conn);
     }
-    function query($sql, $params=[]) {
-        $stmt = sqlsrv_prepare ($this->conn, $sql, $params);
-        if (!$stmt) {
-            throw new Exception("Query error");
+    public function query($sql, $params=[]){
+        $stmt = sqlsrv_prepare($this->conn, $sql, $params);
+        if(!$stmt){
+            throw new Exception("Error executing query");
         }
         if (!sqlsrv_execute($stmt)) {
-            throw new Exception("Query error");
+            throw new Exception("Error executing query");
         }
         return $stmt;
-    } 
+    }
 
 }
-
-
-
-
